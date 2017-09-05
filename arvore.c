@@ -37,10 +37,26 @@ void inserir(NO **root, int id){
 		*root = novo;		
 	
 	else {
-		aux = *root;
-		while (aux != NULL) {
-		
+		aux = *root;                 
+		while (aux != NULL) {            //  verificar qual posição vamos setar o novo numero
+			catra = aux;
+			if (num == aux->id)
+				return 0;
+			
+			if (num < aux->esq)
+				aux = aux->esq;
+			else
+				aux = aux->dir;
 		}
+
+		aux->pai = catra;        // variavel papai
+		
+		if(num < catra->id)
+			catra->esq = novo;
+		else
+			catra->dir = novo;
+
+		return 1;
 	}
 }
 
@@ -50,7 +66,9 @@ void inserir(NO **root, int id){
 
 int main(
 	No *arvore;
+	int ret;
+	
 	inicializa(&arvore);
 	
-	inserir(&arvore);
+	ret = inserir(&arvore, 12);
 );
