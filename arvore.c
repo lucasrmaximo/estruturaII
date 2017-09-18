@@ -1,74 +1,125 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct _no {            // estrutura principal
-	int id;
-	struct _no *esq;
-	struct _no *dir;
-	struct _no *pai;
+
+/* estrutura do noh da arvore -------------------------- */
+typedef struct _no {
+    int id;
+    struct _no *esq;
+    struct _no *dir;
+    struct _no *pai;	
 } NO;
 
-=================
-===inicializa====
-=================
 
-void inicializa(NO **root){             // a função ira setar null no ponteiro auxiliar
-	*root = NULL;                   // I am ROOT
-	
+/* funcao que inicializa a arvore ---------------------- */
+void inicializa(NO **root) {
+	*root = NULL;	
 }
 
-================
-====inserir=====
-================
 
-void inserir(NO **root, int id){
-	NO *novo;			// cria um novo nó
+/* funcao que verifica se a arvore esta vazia ---------- */
+int estaVazia (NO *root) {
+    if (root == NULL)
+        return 1;
+    else
+        return 0;
+}
+
+
+/* funcao que insere um noh na arvore ------------------ */
+int inserir(NO **root, int num) {
+	NO *novo;
 	NO *aux;
-	NO *catra;     //variavel original(papai) eh muito gay, mas foi o sergio que colocou
-                            
-	novo = (NO *) malloc(sizeof(NO));  // reserva o espaço no sistema
+	NO *papai;
+	
+	novo = (NO *) malloc(sizeof(NO));
 	
 	novo->id = num;
 	novo->pai = NULL;
 	novo->esq = NULL;
 	novo->dir = NULL;
 	
-	if(isEmpty(*root))		// verifica se se a arvore está vazia
-		*root = novo;		
+	if (estaVazia(*root))
+		*root = novo;
 	
-	else {
-		aux = *root;                 
-		while (aux != NULL) {            //  verificar qual posição vamos setar o novo numero
-			catra = aux;
-			if (num == aux->id)
-				return 0;
+    else {
+		aux = *root;
+		while (aux != NULL) {
+			papai = aux;
+
+            if(num == aux->id)
+				return 0;       /* nao insere noh duplicado */
 			
-			if (num < aux->esq)
+            if(num < aux->id)
 				aux = aux->esq;
 			else
-				aux = aux->dir;
+				aux = aux->dir;			
 		}
-
-		aux->pai = catra;        // variavel papai
 		
-		if(num < catra->id)
-			catra->esq = novo;
+		novo->pai = papai;
+		
+		if(num < papai->id)
+			papai->esq = novo;
 		else
-			catra->dir = novo;
-
-		return 1;
-	}
+			papai->dir = novo;
+		
+	}	
+    
+    return 1;  /* inseriu com sucesso */
 }
 
-=================
-===funcao main===
-=================
 
-int main(
-	No *arvore;
-	int ret;
+/* funcao de busca em pre-ordem ------------------------ */
+void preOrdem (NO *root) {
+    if (root != NULL) {
+       printf("%d  ", root->id);
+       preOrdem(root->esq);
+       preOrdem(root->dir);
+    }
+}
+
+
+/* funcao de busca em pos-ordem ------------------------ */
+void posOrdem (NO *root) {
+    if (root != NULL) {
+       posOrdem(root->esq);
+       posOrdem(root->dir);
+       printf("%d  ", root->id);
+    }
+}
+
+
+/* funcao de busca em ordem ---------------------------- */
+void emOrdem (NO *root) {
+    if (root != NULL) {
+       emOrdem(root->esq);
+       printf("%d  ", root->id);
+       emOrdem(root->dir);
+    }
+}
+
+
+/* ===================================================== */
+/* FUNCAO MAIN                                                     */
+/* ===================================================== */
+int main() {
+    NO *arvore;
 	
 	inicializa(&arvore);
-	
-	ret = inserir(&arvore, 12);
-);
+    
+	if (!inserir(&arvore, 12)) printf("Valor duplicado\n");
+	if (!inserir(&arvore, 15)) printf("Valor duplicado\n");
+	if (!inserir(&arvore, 21)) printf("Valor duplicado\n");
+	if (!inserir(&arvore, 14)) printf("Valor duplicado\n");
+	if (!inserir(&arvore, 1)) printf("Valor duplicado\n");
+	if (!inserir(&arvore, 13)) printf("Valor duplicado\n");
+	if (!inserir(&arvore, -5)) printf("Valor duplicado\n");
+	if (!inserir(&arvore, 0)) printf("Valor duplicado\n");
+	if (!inserir(&arvore, 1)) printf("Valor duplicado\n");
+
+    preOrdem(arvore); printf("\n");
+    posOrdem(arvore); printf("\n");
+    emOrdem(arvore); printf("\n");
+
+    return 0;
+}
